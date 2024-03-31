@@ -1,0 +1,48 @@
+import serial
+import time
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib import style
+import numpy as np
+
+timeVals = [0]
+rangeVals = [0]
+arduinoConnection = None
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
+
+def connectToArduino():
+    arduinoConnection = serial.Serial('COM4', baudrate=115200)
+    arduinoConnection.setDTR(False)
+    time.sleep(1)
+    arduinoConnection.reset_input_buffer()
+    arduinoConnection.setDTR(True)
+    print ('Connection Successful')
+    return arduinoConnection
+
+def readValue():
+    global arduinoConnection
+    byteLine = arduinoConnection.readline()
+    line = byteLine.decode("utf-8").strip('\r\n')
+    return line
+
+
+def updateGraph(i):
+    global ax
+    global timeVals, rangeVals
+    timeVals.append(timeVals[-1] + .1)
+    rangeVals.append(readValue())
+    ax.clear()
+    ax.plot(timeVals, rangeVals, color='black')
+
+def main():
+    global arduinoConnection
+    global plt
+    arduinoConnection = connectToArduino()
+    ani = animation.FuncAnimation(fig, updateGraph, interval = 1)
+    plt.show()
+
+
+main()
+
+        

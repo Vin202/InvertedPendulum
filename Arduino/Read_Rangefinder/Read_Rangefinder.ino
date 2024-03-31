@@ -14,7 +14,7 @@ float distance;
 float meter;
 void setup()
 {
- Serial.begin(9600);
+ Serial.begin(115200);
  pinMode(trig, OUTPUT);
  digitalWrite(trig, LOW);
  delayMicroseconds(2);
@@ -29,16 +29,16 @@ void loop()
  digitalWrite(trig, LOW);
  duration = pulseIn(echo, HIGH);
  if(duration>=38000){
- Serial.print("Out range");
+ Serial.print("Out of range");
  }
  else{
  distance = duration/58;
- Serial.print(distance);
- Serial.print("cm");
+ Serial.println(distance);
+ /*Serial.print("cm");
  meter=distance/100;
  Serial.print("\t");
  Serial.print(meter);
- Serial.println("m");
+ Serial.println("m");*/
  }
  delay(1000);
 }
